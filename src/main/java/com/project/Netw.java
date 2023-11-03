@@ -15,44 +15,46 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 public class Netw extends WebSocketServer {
-
-  public Netw(int port) throws UnknownHostException {
-    super(new InetSocketAddress(port));
+  
+  public Netw(InetSocketAddress port) {
+    super(port);
+    //TODO Auto-generated constructor stub
   }
 
-  public Netw(InetSocketAddress address) {
-    super(address);
+  private String lmessage;
+
+  @Override
+  public void onOpen(org.java_websocket.WebSocket conn, ClientHandshake handshake) {
+    // TODO Auto-generated method stub
+    System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress()+" se ha conectado :D");
   }
 
-  public Netw(int port, Draft_6455 draft) {
-    super(new InetSocketAddress(port), Collections.<Draft>singletonList(draft));
+  @Override
+  public void onClose(org.java_websocket.WebSocket conn, int code, String reason, boolean remote) {
+    // TODO Auto-generated method stub
+    System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress()+" se ha desconectado :C");
+  }
+
+  @Override
+  public void onMessage(org.java_websocket.WebSocket conn, String message) {
+    // TODO Auto-generated method stub
+    lmessage = message;
+    System.out.println(message);
+  }
+
+  @Override
+  public void onError(org.java_websocket.WebSocket conn, Exception ex) {
+    // TODO Auto-generated method stub
+    System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress()+" ha tenido el error: "+ ex);
   }
 
   @Override
   public void onStart() {
-	System.out.println("server inicializadp");
+    // TODO Auto-generated method stub
+    System.out.println("Servidor inicializado :D");
   }
 
-  @Override
-  public void onOpen(WebSocket conn, ClientHandshake handshake) {
-	System.out.println(conn + "se ha unido a jugar");
-  }
-
-  @Override
-  public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-    broadcast(conn + " has left the room!");
-    System.out.println(conn + " has left the room!");
-  }
-
-  @Override
-  public void onMessage(WebSocket conn, String message) {
-    broadcast(message);
-    System.out.println(conn + ": " + message);
-  }
-
-  @Override
-  public void onMessage(WebSocket conn, ByteBuffer message) {
-    broadcast(message.array());
-    System.out.println(conn + ": " + message);
+  public String getLastMessage() {
+    return lmessage;
   }
 }
